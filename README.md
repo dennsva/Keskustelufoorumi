@@ -3,7 +3,7 @@ Harjoitustyössä tehdään keskustelufoorumi jonkin yhteisön, vaikkapa opiskel
 
 Järjestelmän ylläpitäjällä on oma liittymä, jonka kautta hän ylläpitää järjestön käyttäjien jäsentietoja ja heidän kuulumistan eri ryhmiin, siivota kirjoituskantaa ja määrittellä aiheita, joiden perusteella kirjoituksia voi ryhmitellä.
 
-##Toimintoja:
+## Toimintoja:
 
 * Kirjautuminen
 * Kirjoituksen lisääminen
