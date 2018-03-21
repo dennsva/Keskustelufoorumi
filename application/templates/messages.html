@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+  
+{% block body %}
+<table>
+  <tr>
+    <th>Message</th>
+    <th>Time</th>
+  </tr>
+  {% for message in messages %}
+  <tr>
+    <td>{{ message.text }}</td>
+    <td>{{ message.date_posted }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<form method="POST" action="{{ url_for('messages_create') }}">
+  <input type="text" name="text"/>
+  <input type="submit" value="Post message!"/>
+</form>
+{% endblock %}

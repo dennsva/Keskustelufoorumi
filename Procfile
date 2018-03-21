@@ -1,1 +1,1 @@
-web: gunicorn foorumi:app
+web: gunicorn application:app
