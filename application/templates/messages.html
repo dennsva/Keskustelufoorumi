@@ -5,11 +5,13 @@
   <tr>
     <th>Message</th>
     <th>Time</th>
+    <th>Edit</th>
   </tr>
   {% for message in messages %}
   <tr>
     <td>{{ message.text }}</td>
     <td>{{ message.date_posted }}</td>
+    <td><a href="{{ url_for('message_edit', message_id=message.id) }}">Edit message</a></td>
   </tr>
   {% endfor %}
 </table>
