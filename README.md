@@ -16,4 +16,4 @@ Järjestelmän ylläpitäjällä on oma liittymä, jonka kautta hän ylläpitä�
 http://keskustelufoorumi.herokuapp.com/
 
 [Tietokantakaavio](../master/documentation/tietokantakaavio.png)
-[Käyttötapauksia](../master/kayttotapauksia.md)
+[Käyttötapauksia](../master/documentation/kayttotapauksia.md)
