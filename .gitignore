@@ -105,8 +105,4 @@ venv.bak/
 
 messages.db
 
-.vscode/*
-
-.vscode/
-
-.vscode/settings.json
+/.vscode/
