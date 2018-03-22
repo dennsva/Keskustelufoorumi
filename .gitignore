@@ -104,4 +104,9 @@ venv.bak/
 .mypy_cache/
 
 messages.db
+
 .vscode/*
+
+.vscode/
+
+.vscode/settings.json
