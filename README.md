@@ -12,3 +12,8 @@ Järjestelmän ylläpitäjällä on oma liittymä, jonka kautta hän ylläpitä�
 * Vastineen laatiminen ja muokkaus
 * Kirjoitusten poistaminen
 * Aiheiden määrittely, muokkaus ja poisto
+
+http://keskustelufoorumi.herokuapp.com/
+
+[Tietokantakaavio](../blob/master/documentation/tietokantakaavio.jpg)
+[Käyttötapauksia](../blob/master/kayttotapauksia.txt)
