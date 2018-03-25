@@ -4,13 +4,14 @@
       <meta charset="utf-8">
       <title>Keskustelufoorumi</title>
       <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+      {% block head %}
+        <p>Tähän tuodaan sisältö muualta.</p>
+      {% endblock %}
     </head>
 
     <body>
       {% block body %}
-      <p>
-	Tähän tuodaan sisältö muualta.
-      </p>
+        <p>Tähän tuodaan sisältö muualta.</p>
       {% endblock %}
     </body>
   </html>

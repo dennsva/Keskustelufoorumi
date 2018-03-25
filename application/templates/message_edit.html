@@ -1,10 +1,13 @@
 {% extends "layout.html" %}
-  
+
+{% block head %}
+    
+{% endblock %}
 {% block body %}
 
 <h>Editing message</h>
 
-<form method="POST" action="{{ url_for('messages_update', message_id=message.id) }}">
+<form method="POST" action="{{ url_for('message_edit', message_id=message.id) }}">
   <input type="text" name="text" value="{{ message.text }}"/>
   <input type="submit" value="Post message!"/>
 </form>

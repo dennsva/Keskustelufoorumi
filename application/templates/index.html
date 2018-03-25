@@ -1,10 +1,14 @@
 {% extends "layout.html" %}
 
+{% block head %}
+    
+{% endblock %}
 {% block body %}
 <p>
   Hei maailma!
 </p>
 
 <li><a href="{{ url_for('messages_index') }}">To messages index</a></li>
+<li><a href="{{ url_for('users_index') }}">To users index</a></li>
 {% endblock %}
 
