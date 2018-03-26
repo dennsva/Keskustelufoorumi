@@ -7,3 +7,10 @@ class UserCreateForm(FlaskForm):
  
     class Meta:
         csrf = False
+
+class UserLoginForm(FlaskForm):
+    username = TextField("Username:", [validators.Length(min=1)])
+    password = TextField("Password:")
+ 
+    class Meta:
+        csrf = False

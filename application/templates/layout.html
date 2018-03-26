@@ -4,14 +4,20 @@
       <meta charset="utf-8">
       <title>Keskustelufoorumi</title>
       <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+      {% if current_user.is_authenticated %}
+      <p>Logged in as {{ current_user.username }}. <a href="{{ url_for('user_logout') }}">Log out</a></p>
+      {% else %}
+      <a href="{{ url_for('user_login') }}">Kirjaudu</a>
+      {% endif %}
+
       {% block head %}
-        <p>Tähän tuodaan sisältö muualta.</p>
+        <p>Content from elsewhere</p>
       {% endblock %}
     </head>
 
     <body>
       {% block body %}
-        <p>Tähän tuodaan sisältö muualta.</p>
+        <p>Content from elsewhere</p>
       {% endblock %}
     </body>
   </html>

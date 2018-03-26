@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <h1>Login</h1>
+{% endblock %}
+{% block body %}
+<form method="POST" action="{{ url_for('user_login') }}">
+<table>
+    <tr>
+        <td>{{ form.username.label }}</td>
+        <td>{{ form.username }}</td>
+    </tr>
+    <tr>
+        <td>{{ form.password.label }}</td>
+        <td>{{ form.password }}</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="submit" value="Login!"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>{{ error }}</p>
+        </td>
+    </tr>
+</form>
+{% endblock %}
