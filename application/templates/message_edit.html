@@ -6,11 +6,27 @@
 {% block body %}
 <h1>Editing message</h1>
 
-<a href="{{ url_for('message_index') }}">Back to thread</a>
+<a href="{{ url_for('thread') }}">Back to thread</a>
 
 <form method="POST" action="{{ url_for('message_edit', message_id=message.id) }}">
-  <input type="text" name="text" value="{{ message.text }}"/>
-  <input type="submit" value="Save message"/>
+<table>
+  <tr>
+      <td>{{ form.text.label }}</td>
+      <td>{{ form.text }}</td>
+      <td>
+          <ul>
+          {% for error in form.text.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+          </ul>
+      </td>
+  </tr>
+  <tr>
+      <td colspan="2">
+          <input type="submit" value="Post message"/>
+      </td>
+  </tr>
+</table>
 </form>
 <form method="POST" action="{{ url_for('message_delete', message_id=message.id) }}">
   <input type="submit" value="Delete message"/>
