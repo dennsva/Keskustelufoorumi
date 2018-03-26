@@ -4,6 +4,8 @@
     
 {% endblock %}
 {% block body %}
+<h1>Messages index</h1>
+
 <table>
   <tr>
     <th>Message</th>
@@ -14,7 +16,11 @@
   <tr>
     <td>{{ message.text }}</td>
     <td>{{ message.date_created }}</td>
-    <td><a href="{{ url_for('message_edit', message_id=message.id) }}">Edit message</a></td>
+    <td>
+      <form method="POST" action="{{ url_for('message_edit_form', message_id=message.id) }}">
+        <input type="submit" value="Edit"/>
+      </form>
+    </td>
   </tr>
   {% endfor %}
 </table>

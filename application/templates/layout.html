@@ -5,11 +5,12 @@
       <title>Keskustelufoorumi</title>
       <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
       {% if current_user.is_authenticated %}
-      <p>Logged in as {{ current_user.username }}. <a href="{{ url_for('user_logout') }}">Log out</a></p>
+      Logged in as {{ current_user.username }}. <a href="{{ url_for('user_logout') }}">Log out</a>
       {% else %}
-      <a href="{{ url_for('user_login') }}">Kirjaudu</a>
+      <a href="{{ url_for('user_login') }}">Log in</a>
+      <a href="{{ url_for('user_create') }}">Sign up</a>
       {% endif %}
-
+      <a href="{{ url_for('index') }}">Site index</a>
       {% block head %}
         <p>Content from elsewhere</p>
       {% endblock %}

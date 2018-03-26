@@ -7,7 +7,7 @@ from application.auth.forms import UserCreateForm
 from application.auth.forms import UserLoginForm
 
 @app.route("/users/", methods=["GET"])
-def users_index():
+def user_index():
     return render_template("users.html", users = User.query.all())
 
 @app.route("/users/<user_id>/", methods=["GET"])
@@ -25,12 +25,14 @@ def user_create():
     if not form.validate():
         return render_template("user_create.html", form = form)
 
-    u = User(form.username.data, form.password.data)
+    user = User(form.username.data, form.password.data)
 
-    db.session().add(u)
+    db.session().add(user)
     db.session().commit()
 
-    return redirect(url_for("users_index"))
+    login_user(user)
+
+    return redirect(url_for("index"))
 
 @app.route("/users/login/", methods=["GET"])
 def user_login_form():
@@ -46,9 +48,9 @@ def user_login():
 
     login_user(user)
 
-    return redirect(url_for("users_index"))
+    return redirect(url_for("index"))
 
 @app.route("/users/logout/")
 def user_logout():
     logout_user()
-    return redirect(url_for("users_index"))
+    return redirect(url_for("index"))

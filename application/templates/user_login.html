@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    <h1>Login</h1>
+
 {% endblock %}
 {% block body %}
+<h1>Login</h1>
+
 <form method="POST" action="{{ url_for('user_login') }}">
 <table>
     <tr>
