@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    
+{% endblock %}
+{% block body %}
+<h1>Messages index</h1>
+
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Time</th>
+    <th>Edit</th>
+  </tr>
+  {% for thread in threads %}
+  <tr>
+    <td><a href="{{ url_for('thread', thread_id=thread.id) }}">{{ thread.subject }}</a></td>
+    <td>{{ thread.date_created }}</td>
+    <td>
+      <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
+        <input type="submit" value="Edit"/>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<form method="POST" action="{{ url_for('thread_create_form') }}">
+  <input type="submit" value="Create new thread"/>
+</form>
+{% endblock %}

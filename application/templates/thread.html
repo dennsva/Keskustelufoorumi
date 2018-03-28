@@ -4,8 +4,10 @@
     
 {% endblock %}
 {% block body %}
-<h1>Messages index</h1>
+<h1>{{ thread.subject }}</h1>
+<p>{{ thread.text }}</p>
 
+<a href="{{ url_for('thread_index') }}">Back to thread index</a>
 <table>
   <tr>
     <th>Message</th>
@@ -25,7 +27,7 @@
   {% endfor %}
 </table>
 
-<form method="POST" action="{{ url_for('message_create') }}">
+<form method="POST" action="{{ url_for('message_create', thread_id=thread.id) }}">
 <table>
   <tr>
       <td>{{ form.text.label }}</td>

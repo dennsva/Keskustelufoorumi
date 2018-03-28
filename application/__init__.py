@@ -23,6 +23,9 @@ from application.messages import views
 from application.auth import models
 from application.auth import views
 
+from application.thread import models
+from application.thread import views
+
 # login
 from application.auth.models import User
 from os import urandom
