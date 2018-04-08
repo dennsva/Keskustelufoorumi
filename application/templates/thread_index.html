@@ -4,7 +4,12 @@
     
 {% endblock %}
 {% block body %}
-<h1>Messages index</h1>
+
+{% if search_text is defined %}
+<h1>Threads matching "{{ search_text }}"</h1>
+{% else %}
+<h1>Forum index</h1>
+{% endif %}
 
 <table>
   <tr>
@@ -27,5 +32,23 @@
 
 <form method="POST" action="{{ url_for('thread_create_form') }}">
   <input type="submit" value="Create new thread"/>
+</form>
+
+<form method="POST" action="{{ url_for('thread_search_post') }}">
+<table>
+  <tr>
+    <td>{{ thread_search_form.search_text }}</td>
+    <td>
+      <input type="submit" value="Search threads"/>
+    </td>
+    <td>
+      <ul>
+      {% for error in thread_search_form.search_text.errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
 </form>
 {% endblock %}

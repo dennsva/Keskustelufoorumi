@@ -4,10 +4,11 @@ from flask_login import login_required, current_user
 from application.thread.models import Thread
 from application.thread.forms import ThreadCreateForm
 from application.thread.forms import ThreadEditForm
+from application.thread.forms import ThreadSearchForm
 
 @app.route("/threads/", methods=["GET"])
 def thread_index():
-    return render_template("thread_index.html", threads = Thread.query.all())
+    return render_template("thread_index.html", threads=Thread.thread_list(), thread_search_form=ThreadSearchForm())
 
 @app.route("/threads/", methods=["POST"])
 @login_required
@@ -30,5 +31,14 @@ def thread_create_form():
 
 @app.route("/threads/<thread_id>/edit/", methods=["POST"])
 def thread_edit_form(thread_id):
-    thread = Thread.query.get(thread._id)
+    thread = Thread.query.get(thread_id)
     return render_template("thread_edit.html", form = ThreadEditForm(thread.text), thread = thread)
+
+@app.route("/threads/search/<search_text>/", methods=["GET"])
+def thread_search(search_text):
+    return render_template("thread_index.html", search_text=search_text, threads = Thread.search_thread(search_text), thread_search_form=ThreadSearchForm())
+
+@app.route("/threads/search/", methods=["POST"])
+def thread_search_post():
+    form = ThreadSearchForm(request.form)
+    return redirect(url_for("thread_search", search_text=form.search_text.data))
