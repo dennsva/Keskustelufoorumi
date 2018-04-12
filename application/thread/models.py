@@ -22,28 +22,32 @@ class Thread(Base):
 
         search_text_param = "%" + search_text + "%"
 
-        stmt = text("SELECT Thread.id, Thread.subject, Thread.date_created, Thread.account_id, Account.username FROM Thread"
+        stmt = text("SELECT Thread.id, Thread.subject, Thread.date_created, Thread.account_id, Account.username, COUNT(Message.id) AS messages FROM Thread"
                      " LEFT JOIN Account ON Thread.account_id = Account.id"
-                     " WHERE Thread.subject LIKE :search_text_param").params(search_text_param=search_text_param)
+                     " LEFT JOIN Message ON Thread.id = Message.thread_id"
+                     " WHERE Thread.subject LIKE :search_text_param"
+                     " GROUP BY Message.thread_id").params(search_text_param=search_text_param)
 
         res = db.engine.execute(stmt)
 
         search_result = []
         for row in res:
-            search_result.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4]})
+            search_result.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4], "messages":row[5]})
 
         return search_result
 
     @staticmethod
     def thread_list():
 
-        stmt = text("SELECT Thread.id, Thread.subject, Thread.date_created, Thread.account_id, Account.username FROM Thread"
-                     " LEFT JOIN Account ON Thread.account_id = Account.id")
+        stmt = text("SELECT Thread.id, Thread.subject, Thread.date_created, Thread.account_id, Account.username, COUNT(Message.id) AS messages FROM Thread"
+                     " LEFT JOIN Account ON Thread.account_id = Account.id"
+                     " LEFT JOIN Message ON Thread.id = Message.thread_id"
+                     " GROUP BY Message.thread_id")
 
         res = db.engine.execute(stmt)
 
         threads = []
         for row in res:
-            threads.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4]})
+            threads.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4], "messages":row[5]})
 
         return threads

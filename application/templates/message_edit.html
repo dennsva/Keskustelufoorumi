@@ -6,7 +6,7 @@
 {% block body %}
 <h1>Editing message</h1>
 
-<a href="{{ url_for('thread') }}">Back to thread</a>
+<a href="{{ url_for('thread', thread_id=message.thread_id) }}">Back to thread</a>
 
 <form method="POST" action="{{ url_for('message_edit', message_id=message.id) }}">
 <table>
@@ -23,7 +23,7 @@
   </tr>
   <tr>
       <td colspan="2">
-          <input type="submit" value="Post message"/>
+          <input type="submit" value="Submit"/>
       </td>
   </tr>
 </table>
