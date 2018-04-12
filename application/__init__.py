@@ -1,8 +1,5 @@
 from flask import Flask
 app = Flask(__name__)
-from application.auth.models import User
-from application.messages.models import Message
-from application.thread.models import Thread
 
 # database
 from flask_sqlalchemy import SQLAlchemy
@@ -50,21 +47,3 @@ try:
     db.create_all()
 except:
     pass
-
-# create default user
-
-user = User("dennis", "moi")
-db.session().add(user)
-db.session().commit()
-
-# create default thread
-
-thread = Thread("hello world", "this is a default thread", User.query.first())
-db.session().add(thread)
-db.session().commit()
-
-# create default message
-
-message = Message("hello", User.query.first(), Thread.query.first())
-db.session().add(message)
-db.session().commit()
