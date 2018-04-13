@@ -26,8 +26,12 @@ class Thread(Base):
                      " LEFT JOIN Account ON Thread.account_id = Account.id"
                      " LEFT JOIN Message ON Thread.id = Message.thread_id"
                      " WHERE Thread.subject LIKE :search_text_param"
-                     " GROUP BY Message.thread_id").params(search_text_param=search_text_param)
+                     " GROUP BY Thread.id, Account.username").params(search_text_param=search_text_param)
 
+    # postgresql vaatii tuon Account.usename lopussa.
+    # Se ei vaikuta kyselyyn mitenkään, sillä viestiketjun
+    # aloittaja on yksikäsitteinen.
+    
         res = db.engine.execute(stmt)
 
         search_result = []
@@ -42,7 +46,7 @@ class Thread(Base):
         stmt = text("SELECT Thread.id, Thread.subject, Thread.date_created, Thread.account_id, Account.username, COUNT(Message.id) AS messages FROM Thread"
                      " LEFT JOIN Account ON Thread.account_id = Account.id"
                      " LEFT JOIN Message ON Thread.id = Message.thread_id"
-                     " GROUP BY Message.thread_id")
+                     " GROUP BY Thread.id, Account.username")
 
         res = db.engine.execute(stmt)
 
