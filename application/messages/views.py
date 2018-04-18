@@ -1,18 +1,23 @@
 from application import app, db
 from flask import redirect, render_template, request, url_for
 from flask_login import login_required, current_user
+
 from application.messages.models import Message
 from application.messages.forms import MessageCreateForm
 from application.messages.forms import MessageEditForm
+
 from application.thread.models import Thread
+
+from application.tagging.models import Tagging
+from application.tagging.forms import TaggingCreateForm
 
 @app.route("/messages/", methods=["GET"])
 def message_index():
-    return render_template("thread.html", form = MessageCreateForm(), thread = Thread.query.first(), messages=Message.query.all())
+    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread = Thread.query.first(), messages=Message.query.all())
 
 @app.route("/threads/<thread_id>/", methods=["GET"])
 def thread(thread_id):
-    return render_template("thread.html", form = MessageCreateForm(), thread = Thread.query.get(thread_id), messages = db.session().query(Message).filter_by(thread_id = thread_id))
+    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread = Thread.query.get(thread_id), messages = db.session().query(Message).filter_by(thread_id = thread_id))
 
 @app.route("/threads/<thread_id>/", methods=["POST"])
 @login_required

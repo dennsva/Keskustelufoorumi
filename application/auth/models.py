@@ -10,6 +10,7 @@ class User(Base):
     admin = db.Column(db.Boolean, default=False)
 
     messages = db.relationship("Message", backref='account', lazy=True)
+    taggings = db.relationship("Tagging", backref='account', lazy=True)
 
     def __init__(self, username, password):
         self.username = username

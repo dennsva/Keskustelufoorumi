@@ -26,6 +26,12 @@ from application.auth import views
 from application.thread import models
 from application.thread import views
 
+from application.tag import models
+# from application.tag import views
+
+from application.tagging import models
+# from application.tagging import views
+
 # login
 from application.auth.models import User
 from os import urandom

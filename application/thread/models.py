@@ -11,6 +11,7 @@ class Thread(Base):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
 
     messages = db.relationship("Message", backref='thread', lazy=True)
+    taggings = db.relationship("Tagging", backref='thread', lazy=True)
 
     def __init__(self, subject, text, user_id):
         self.subject = subject
