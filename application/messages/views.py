@@ -1,6 +1,6 @@
-from application import app, db
+from application import app, db, login_required
 from flask import redirect, render_template, request, url_for
-from flask_login import login_required, current_user
+from flask_login import current_user
 
 from application.messages.models import Message
 from application.messages.forms import MessageCreateForm
@@ -22,7 +22,7 @@ def thread(thread_id):
     return render_template("thread.html", thread=Thread.query.get(thread_id), message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), messages=db.session().query(Message).filter_by(thread_id = thread_id), tags=Tag.find_thread_id(thread_id))
 
 @app.route("/threads/<thread_id>/", methods=["POST"])
-@login_required
+@login_required(role="ANY")
 def message_create(thread_id):
     form = MessageCreateForm(request.form)
 
