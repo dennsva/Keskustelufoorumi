@@ -5,6 +5,10 @@
 {% endblock %}
 {% block body %}
 <h1>{{ thread.subject }}</h1>
+<a>Tags: </a>
+{% for tag in tags %}
+<a href="{{ url_for('thread_find_tag_id', tag_id=tag.id) }}">{{ tag.name }}</a>
+{% endfor %}
 <p>{{ thread.text }}</p>
 
 <a href="{{ url_for('thread_index') }}">Back to thread index</a>
@@ -30,8 +34,8 @@
 <form method="POST" action="{{ url_for('message_create', thread_id=thread.id) }}">
 <table>
   <tr>
-      <td>{{ message_create_form.text.label }}</td>
       <td>{{ message_create_form.text }}</td>
+      <td><input type="submit" value="Post message"/></td>
       <td>
           <ul>
           {% for error in message_create_form.text.errors %}
@@ -40,30 +44,20 @@
           </ul>
       </td>
   </tr>
-  <tr>
-      <td colspan="2">
-          <input type="submit" value="Post message"/>
-      </td>
-  </tr>
 </table>
 </form>
 
-<form method="POST" action="{{ url_for('message_create', thread_id=thread.id) }}">
+<form method="POST" action="{{ url_for('tagging_create', thread_id=thread.id) }}">
   <table>
     <tr>
-        <td>{{ tagging_create_form.name.label }}</td>
-        <td>{{ tagging_create_form.name }}</td>
+        <td>{{ tagging_create_form.id }}</td>
+        <td><input type="submit" value="Tag thread!"/></td>
         <td>
             <ul>
-            {% for error in tagging_create_form.name.errors %}
+            {% for error in tagging_create_form.id.errors %}
             <li>{{ error }}</li>
             {% endfor %}
             </ul>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="submit" value="Post message"/>
         </td>
     </tr>
   </table>

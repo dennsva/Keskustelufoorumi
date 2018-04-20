@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    
+{% endblock %}
+{% block body %}
+
+<h1>Manage tags</h1>
+
+<table>
+  <tr>
+    <th>Tag</th>
+    <th>Options</th>
+  </tr>
+  {% for tag in tags %}
+  <tr>
+    <td><a href="{{ url_for('thread_find_tag_id', tag_id=tag.id) }}">{{ tag.name }}</a></td>
+    <td>
+      <form method="POST" action="{{ url_for('tag_edit_form', tag_id=tag.id) }}">
+        <input type="submit" value="Edit"/>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<form method="POST" action="{{ url_for('tag_create') }}">
+    <table>
+        <tr>
+            <td>{{ tag_create_form.name }}</td>
+            <td><input type="submit" value="Create new tag"/></td>
+            <td>
+                <ul>
+                {% for error in tag_create_form.name.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}

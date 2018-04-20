@@ -15,7 +15,33 @@ class Tag(Base):
     @staticmethod
     def tag_list():
 
-        stmt = text("SELECT Tag.id, Tag.name AS messages FROM Tag")
+        stmt = text("SELECT Tag.id, Tag.name FROM Tag")
+
+        res = db.engine.execute(stmt)
+
+        tags = []
+        for row in res:
+            tags.append({"id":row[0], "name":row[1]})
+
+        return tags
+
+    @staticmethod
+    def tag_list_tuple():
+
+        stmt = text("SELECT Tag.id, Tag.name FROM Tag")
+
+        res = db.engine.execute(stmt)
+
+        tags = []
+        for row in res:
+            tags.append((row[0], row[1]))
+
+        return tags
+    
+    @staticmethod
+    def find_thread_id(thread_id):
+
+        stmt = text("SELECT Tag.id, Tag.name FROM Tag LEFT JOIN Tagging ON Tagging.tag_id = Tag.id WHERE Tagging.thread_id=:thread_id").params(thread_id=thread_id)
 
         res = db.engine.execute(stmt)
 

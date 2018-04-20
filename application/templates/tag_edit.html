@@ -4,18 +4,16 @@
     
 {% endblock %}
 {% block body %}
-<h1>Editing message</h1>
+<h1>Editing tag</h1>
 
-<a href="{{ url_for('thread', thread_id=message.thread_id) }}">Back to thread</a>
-
-<form method="POST" action="{{ url_for('message_edit', message_id=message.id) }}">
+<form method="POST" action="{{ url_for('tag_edit', tag_id=tag.id) }}">
 <table>
   <tr>
-      <td>{{ form.text.label }}</td>
-      <td>{{ form.text }}</td>
+      <td>{{ tag_edit_form.name.label }}</td>
+      <td>{{ tag_edit_form.name }}</td>
       <td>
           <ul>
-          {% for error in form.text.errors %}
+          {% for error in tag_edit_form.name.errors %}
           <li>{{ error }}</li>
           {% endfor %}
           </ul>
@@ -28,7 +26,7 @@
   </tr>
 </table>
 </form>
-<form method="POST" action="{{ url_for('message_delete', message_id=message.id) }}">
+<form method="POST" action="{{ url_for('tag_delete', tag_id=tag.id) }}">
   <input type="submit" value="Delete"/>
 </form>
 {% endblock %}

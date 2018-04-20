@@ -1,8 +1,12 @@
 from application import app, db
 from flask import redirect, render_template, request, url_for
 from flask_login import login_required, current_user
+
 from application.thread.models import Thread
+from application.tag.models import Tag
+from application.tagging.models import Tagging
 from application.messages.models import Message
+
 from application.thread.forms import ThreadCreateForm
 from application.thread.forms import ThreadEditForm
 from application.thread.forms import ThreadSearchForm
@@ -40,8 +44,7 @@ def thread_edit(thread_id):
     form = ThreadEditForm(request.form)
 
     if not form.validate():
-        thread = Thread.query.get(thread_id)
-        return render_template("thread_create.html", form = form, thread=thread)
+        return render_template("thread_edit.html", form=form, thread=Thread.query.get(thread_id))
 
     thread = Thread.query.get(thread_id)
     thread.subject = form.subject.data
@@ -66,8 +69,13 @@ def thread_delete(thread_id):
     thread = Thread.query.get(thread_id)
 
     Message.thread_delete_messages(thread_id)
+    Tagging.thread_delete_taggings(thread_id)
 
     db.session().delete(thread)
     db.session().commit()
 
     return redirect(url_for("thread_index"))
+
+@app.route("/threads/tag/<tag_id>/", methods=["GET"])
+def thread_find_tag_id(tag_id):
+    return render_template("thread_index.html", tag=Tag.query.get(tag_id), threads = Thread.find_tag_id(tag_id), thread_search_form=ThreadSearchForm())

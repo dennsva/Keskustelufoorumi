@@ -7,6 +7,8 @@
 
 {% if search_text is defined %}
 <h1>Threads matching "{{ search_text }}"</h1>
+{% elif tag is defined %}
+<h1>Threads tagged with "{{ tag.name }}"</h1>
 {% else %}
 <h1>Forum index</h1>
 {% endif %}

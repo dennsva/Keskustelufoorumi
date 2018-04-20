@@ -6,3 +6,9 @@ class TagCreateForm(FlaskForm):
  
     class Meta:
         csrf = False
+
+class TagEditForm(FlaskForm):
+    name = TextField("Name:", [validators.Length(min=1)])
+ 
+    class Meta:
+        csrf = False
