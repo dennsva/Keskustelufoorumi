@@ -55,19 +55,27 @@ def login_required(role="ANY"):
 # application
 from application import views
 
+from application.tag import models
+
 from application.messages import models
-from application.messages import views
 
 from application.auth import models
-from application.auth import views
 
 from application.thread import models
-from application.thread import views
-
-from application.tag import models
-from application.tag import views
 
 from application.tagging import models
+
+# create database tables
+try:
+    db.create_all()
+except:
+    pass
+
+# views
+from application.tag import views
+from application.messages import views
+from application.auth import views
+from application.thread import views
 from application.tagging import views
 
 # more login functionality
@@ -76,9 +84,3 @@ from application.auth.models import User
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-
-# create database tables
-try:
-    db.create_all()
-except:
-    pass
