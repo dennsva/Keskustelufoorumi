@@ -22,3 +22,18 @@ class Message(Base):
                      " WHERE thread_id = :thread_id").params(thread_id=thread_id)
 
         db.engine.execute(stmt)
+
+    @staticmethod
+    def find_thread_id(thread_id):
+
+        stmt = text("SELECT Message.id, Message.text, Message.date_created, Message.account_id, Account.username FROM Message"
+                     " LEFT JOIN Account ON Message.account_id = Account.id"
+                     " WHERE Message.thread_id = :thread_id").params(thread_id=thread_id)
+
+        res = db.engine.execute(stmt)
+
+        search_result = []
+        for row in res:
+            search_result.append({"id":row[0], "text":row[1], "date_created":row[2], "user_id":row[3], "username":row[4]})
+
+        return search_result

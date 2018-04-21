@@ -67,10 +67,6 @@ class Thread(Base):
                      " WHERE Tagging.tag_id = :tag_id"
                      " GROUP BY Thread.id, Account.username").params(tag_id=tag_id)
 
-    # postgresql vaatii tuon Account.usename lopussa.
-    # Se ei vaikuta kyselyyn mitenkään, sillä viestiketjun
-    # aloittaja on yksikäsitteinen.
-    
         res = db.engine.execute(stmt)
 
         search_result = []

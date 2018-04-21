@@ -4,29 +4,52 @@
     
 {% endblock %}
 {% block body %}
-<h1>{{ thread.subject }}</h1>
-<a>Tags: </a>
-{% for tag in tags %}
-<a href="{{ url_for('thread_find_tag_id', tag_id=tag.id) }}">{{ tag.name }}</a>
-{% endfor %}
-<p>{{ thread.text }}</p>
 
-<a href="{{ url_for('thread_index') }}">Back to thread index</a>
+<div class="mt-4 mb-4">
+<h1>{{ thread.subject }}</h1>
+<h>Posted by {{ thread_user.username }} on {{ thread.date_created }}</h>
+</div>
+
+<div class="mt-4 mb-4">
+  <div class="container border border-success bg-success text-light p-1">
+    <div class="mt-1 mb-1 ml-2 mr-2 float-left"><h>Tags:</h></div>
+
+    {% for tag in tags %}
+    <div class="float-left ml-1">
+      <form method="GET" action="{{ url_for('thread_find_tag_id', tag_id=tag.id) }}">
+        <button type="submit" class="btn btn-secondary btn-sm">{{ tag.name }}</button>
+      </form>
+    </div>
+    {% endfor %}
+
+    <div class="text-right">
+      <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
+        <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="container border border-success border-top-0">
+    <p>{{ thread.text }}</p>
+  </div>
+</div>
+
 <table>
-  <tr>
-    <th>Message</th>
-    <th>Time</th>
-    <th>Edit</th>
-  </tr>
   {% for message in messages %}
   <tr>
-    <td>{{ message.text }}</td>
-    <td>{{ message.date_created }}</td>
-    <td>
-      <form method="POST" action="{{ url_for('message_edit_form', message_id=message.id) }}">
-        <input type="submit" value="Edit"/>
-      </form>
-    </td>
+
+      <div class="mt-4 mb-4">
+      <div class="container border border-success bg-success text-light p-1">
+        <message-title class="p-3">{{ message.username }} on {{ message.date_created }}</message-title>
+        <form method="POST" action="{{ url_for('message_edit_form', message_id=message.id) }}">
+          <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+        </form>
+      </div>
+
+      <div class="container border border-success border-top-0">
+        <message-text class="p-3">{{ message.text }}</message-text>
+      </div>
+  </div>
   </tr>
   {% endfor %}
 </table>

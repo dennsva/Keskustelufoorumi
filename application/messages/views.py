@@ -7,6 +7,7 @@ from application.messages.forms import MessageCreateForm
 from application.messages.forms import MessageEditForm
 
 from application.thread.models import Thread
+from application.auth.models import User
 
 from application.tagging.models import Tagging
 from application.tagging.forms import TaggingCreateForm
@@ -15,11 +16,13 @@ from application.tag.models import Tag
 
 @app.route("/messages/", methods=["GET"])
 def message_index():
-    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all())
+    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all(), thread_user=User("Gandalf", "password"))
 
 @app.route("/threads/<thread_id>/", methods=["GET"])
 def thread(thread_id):
-    return render_template("thread.html", thread=Thread.query.get(thread_id), message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), messages=db.session().query(Message).filter_by(thread_id = thread_id), tags=Tag.find_thread_id(thread_id))
+    thread = Thread.query.get(thread_id)
+    thread_user = User.query.get(thread.account_id)
+    return render_template("thread.html", thread=thread, thread_user=thread_user, message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), messages=Message.find_thread_id(thread_id), tags=Tag.find_thread_id(thread_id))
 
 @app.route("/threads/<thread_id>/", methods=["POST"])
 @login_required(role="ANY")
