@@ -15,6 +15,21 @@ class Message(Base):
         self.account_id = user_id
         self.thread_id = thread_id
 
+    def validate(self):
+        if (self.text is None):
+            return False
+        if (len(self.text) < 1):
+            return False
+        return True
+
+    def errors(self):
+        errors = []
+        if (self.text is None):
+            errors.append("The message cannot be empty")
+        elif (len(self.text) < 1):
+            errors.append("The message cannot be empty")
+        return errors
+
     @staticmethod
     def thread_delete_messages(thread_id):
 
