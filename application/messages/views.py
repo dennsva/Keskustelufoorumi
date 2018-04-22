@@ -18,7 +18,8 @@ from application.tag.models import Tag
 def message_index():
     return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all(), thread_user=User("Gandalf", "password"))
 
-@app.route("/threads/<thread_id>/", methods=["GET"])
+@app.route("/thread/<thread_id>/", methods=["GET"])
+@app.route("/thread/<thread_id>/edit/<message_edit_id>/", methods=["GET"])
 def thread(thread_id, **params):
     message_create_text = ""
     message_edit_text = None
@@ -46,7 +47,7 @@ def thread(thread_id, **params):
 
     return render_template("thread.html", thread=thread, thread_user=thread_user, message_create_text=message_create_text, message_create_errors=message_create_errors, tagging=tagging, messages=Message.find_thread_id(thread_id), tags=Tag.find_thread_id(thread_id), message_edit_id=message_edit_id, message_edit_text=message_edit_text, message_edit_errors=message_edit_errors)
 
-@app.route("/threads/<thread_id>/", methods=["POST"])
+@app.route("/thread/<thread_id>/", methods=["POST"])
 @login_required(role="ANY")
 def message_create(thread_id):
     text = request.form.get("text")
@@ -54,17 +55,18 @@ def message_create(thread_id):
     message = Message(text, current_user.id, thread_id)
 
     if not message.validate():
-        return thread(thread_id, text=text, message_create_errors=message.errors())
+        return thread(thread_id, message_create_text=text, message_create_errors=message.errors())
 
     db.session().add(message)
     db.session().commit()
   
     return redirect(url_for("thread", thread_id=thread_id))
 
-@app.route("/messages/<message_id>/edit/", methods=["POST"])
-def message_edit_form(message_id):
+@app.route("/thread/<thread_id>/edit/#<message_id>", methods=["POST"])
+def message_edit_form(thread_id, message_id):
     message = Message.query.get(message_id)
-    return thread(message.thread_id, message_edit_id=message_id)
+    thread_id = message.thread_id
+    return redirect(url_for("thread", thread_id=message.thread_id, _anchor=message_id, message_edit_id=message_id))
 
 @app.route("/messages/<message_id>/edit/post/", methods=["POST"])
 def message_edit(message_id):
