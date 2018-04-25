@@ -14,6 +14,8 @@ from application.tagging.forms import TaggingCreateForm
 
 from application.tag.models import Tag
 
+from application.read.models import Read
+
 @app.route("/messages/", methods=["GET"])
 def message_index():
     return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all(), thread_user=User("Gandalf", "password"))
@@ -44,6 +46,9 @@ def thread(thread_id, **params):
 
     thread = Thread.query.get(thread_id)
     thread_user = User.query.get(thread.account_id)
+
+    if current_user.is_authenticated:
+        Read.mark_as_read(current_user.id, thread_id)
 
     return render_template("thread.html", thread=thread, thread_user=thread_user, message_create_text=message_create_text, message_create_errors=message_create_errors, tagging=tagging, messages=Message.find_thread_id(thread_id), tags=Tag.find_thread_id(thread_id), message_edit_id=message_edit_id, message_edit_text=message_edit_text, message_edit_errors=message_edit_errors)
 

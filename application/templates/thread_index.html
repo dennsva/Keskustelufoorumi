@@ -19,12 +19,14 @@
     <th>Time</th>
     <th>Messages</th>
     <th>Edit</th>
+    <th>TEST</th>
   </tr>
   {% for thread in threads %}
   <tr>
     <td><a href="{{ url_for('thread', thread_id=thread.id) }}">{{ thread.subject }}</a></td>
     <td>{{ thread.date_created }}</td>
     <td>{{ thread.messages }}</td>
+    <td>{{ thread.unread }}</td>
     <td>
       <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
         <input type="submit" value="Edit"/>

@@ -63,6 +63,8 @@ from application.auth import models
 
 from application.thread import models
 
+from application.read import models
+
 from application.tagging import models
 
 # create database tables

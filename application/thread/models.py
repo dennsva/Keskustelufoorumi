@@ -3,6 +3,9 @@ from application.models import Base
 
 from sqlalchemy.sql import text
 
+from application.read.models import Read
+from flask_login import current_user
+
 class Thread(Base):
 
     subject = db.Column(db.String(128), nullable=False)
@@ -29,7 +32,7 @@ class Thread(Base):
                      " WHERE Thread.subject LIKE :search_text_param"
                      " GROUP BY Thread.id, Account.username").params(search_text_param=search_text_param)
 
-    # postgresql vaatii tuon Account.usename lopussa.
+    # postgresql vaatii tuon Account.username lopussa.
     # Se ei vaikuta kyselyyn mitenkään, sillä viestiketjun
     # aloittaja on yksikäsitteinen.
     
@@ -55,6 +58,12 @@ class Thread(Base):
         for row in res:
             threads.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4], "messages":row[5]})
 
+        for thread in threads:
+            if current_user.is_authenticated:
+                thread["unread"] = Read.unread_count(current_user.id, thread["id"])
+            else:
+                thread["unread"] = thread["messages"]
+
         return threads
 
     @staticmethod
@@ -72,5 +81,11 @@ class Thread(Base):
         search_result = []
         for row in res:
             search_result.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4], "messages":row[5]})
+
+        for thread in search_result:
+            if current_user.is_authenticated:
+                thread["unread"] = Read.unread_count(current_user.id, thread["id"])
+            else:
+                thread["unread"] = thread["messages"]
 
         return search_result
