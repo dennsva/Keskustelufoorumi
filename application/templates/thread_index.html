@@ -1,8 +1,5 @@
 {% extends "layout.html" %}
 
-{% block head %}
-    
-{% endblock %}
 {% block body %}
 
 {% if search_text is defined %}
@@ -10,51 +7,51 @@
 {% elif tag is defined %}
 <h1>Threads tagged with "{{ tag.name }}"</h1>
 {% else %}
-<h1>Forum index</h1>
+<h1>Threads</h1>
 {% endif %}
 
-<table>
-  <tr>
+<table class="table">
+  <tr class="border border-success bg-success text-light">
     <th>Subject</th>
+    <th>Replies</th>
     <th>Time</th>
-    <th>Messages</th>
-    <th>Edit</th>
-    <th>TEST</th>
   </tr>
   {% for thread in threads %}
-  <tr>
-    <td><a href="{{ url_for('thread', thread_id=thread.id) }}">{{ thread.subject }}</a></td>
-    <td>{{ thread.date_created }}</td>
+  <tr class="border-left border-right border-bottom border-top-0">
+    <td><a href="{{ url_for('thread', thread_id=thread.id) }}">{{ thread.subject }}
+      {% if thread.unread > 0 %}
+      ({{ thread.unread }})</a></td>
+      {% endif %}
     <td>{{ thread.messages }}</td>
-    <td>{{ thread.unread }}</td>
-    <td>
-      <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
-        <input type="submit" value="Edit"/>
-      </form>
-    </td>
+    <td>{{ thread.date_created }}</td>
   </tr>
   {% endfor %}
 </table>
 
-<form method="POST" action="{{ url_for('thread_create_form') }}">
-  <input type="submit" value="Create new thread"/>
-</form>
-
-<form method="POST" action="{{ url_for('thread_search_post') }}">
-<table>
-  <tr>
-    <td>{{ thread_search_form.search_text }}</td>
-    <td>
-      <input type="submit" value="Search threads"/>
-    </td>
-    <td>
-      <ul>
-      {% for error in thread_search_form.search_text.errors %}
-      <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-    </td>
-  </tr>
-</table>
-</form>
+<div class="mt-4 mb-4">
+    <div class="container border border-success bg-success text-light p-1">
+      <div class="mt-1 mb-1 ml-2 mr-2 text-left">
+        <h>New thread</h>
+      </div>
+    </div>
+  
+    <form method="POST" action="{{ url_for('thread_create') }}">
+      <div class="container border border-success border-top-0 pb-3 bg-success">
+        <input type="text" class="form-control" name="subject" placeholder="Subject">{{ subject }}</input>
+      </div>
+      <div class="container border border-success border-top-0 bg-success">
+        <textarea class="form-control" name="text" rows="7" placeholder="Text">{{ text }}</textarea>
+      </div>
+  
+      <div class="container border border-success border-top-0 bg-success text-light p-1">
+        <div class="text-left text-light">
+          <button type="submit" class="btn btn-secondary btn-sm">Create thread</button>
+        </div>
+  
+        {% for error in message_create_errors %}
+        <div><h>{{ error }}</h></div>
+        {% endfor %}
+      </div>
+    </form>
+  </div>  
 {% endblock %}

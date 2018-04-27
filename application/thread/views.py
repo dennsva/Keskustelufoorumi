@@ -18,6 +18,7 @@ def thread_index():
 @app.route("/threads/", methods=["POST"])
 @login_required
 def thread_create():
+    ## FIX VALIDATION!
     form = ThreadCreateForm(request.form)
 
     if not form.validate():

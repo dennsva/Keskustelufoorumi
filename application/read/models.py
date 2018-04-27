@@ -24,17 +24,14 @@ class Read(Base):
 
         res = db.engine.execute(stmt)
 
-        if res is None:
-            return 0
-
-        for row in res:
-            read=row[0]
-            break
+        read = res.fetchone()[0]
+        res.close()
 
         return read
 
     @staticmethod
     def unread_count(user_id, thread_id):
+        print("UNREAD MESSAGES: Read.messages_total(thread_id) - Read.read_count(user_id, thread_id)")
         return Read.messages_total(thread_id) - Read.read_count(user_id, thread_id)
 
     @staticmethod
@@ -45,12 +42,8 @@ class Read(Base):
 
         res = db.engine.execute(stmt)
 
-        if res is None:
-            return 0
-
-        for row in res:
-            messages=row[0]
-            break
+        messages = res.fetchone()[0]
+        res.close()
 
         return messages
 
@@ -58,6 +51,19 @@ class Read(Base):
     def mark_as_read(user_id, thread_id):
         messages = Message.find_thread_id(thread_id)
         for message in messages:
-            stmt = text("INSERT INTO Read (account_id, message_id) VALUES (:account_id, :message_id)").params(account_id=user_id, message_id=message["id"])
+            stmt1 = text("SELECT COUNT(Read.id) FROM Read"
+                        " WHERE Read.account_id = :account_id"
+                        " AND Read.message_id = :message_id").params(account_id=user_id, message_id=message["id"])
 
-            db.engine.execute(stmt)
+            res = db.engine.execute(stmt1)
+
+            found = res.fetchone()[0]
+            res.close()
+
+            if found==0:
+                stmt2 = text("INSERT INTO Read (account_id, message_id)"
+                            " VALUES (:account_id, :message_id)").params(account_id=user_id, message_id=message["id"])
+
+                db.engine.execute(stmt2)
+
+            print("MESSAGE: ", message["id"], "processed")

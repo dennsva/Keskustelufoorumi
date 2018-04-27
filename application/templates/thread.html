@@ -1,9 +1,5 @@
 {% extends "layout.html" %}
 
-{% block head %}
-    
-{% endblock %}
-
 {% block body %}
 <div class="mt-4 mb-4">
 <h1>{{ thread.subject }}</h1>
@@ -64,11 +60,11 @@
 
   {% if message.id==message_edit_id %}
   <form method="POST" action="{{ url_for('message_edit', message_id=message.id) }}">
-    <div class="container border border-success border-top-0">
+    <div class="container border border-success border-top-0 bg-success">
       <textarea class="form-control" name="text" rows="7">{{ message_edit_text }}</textarea>
     </div>
 
-    <div class="container border border-success border-top-0 text-dark bg-light p-1">
+    <div class="container border border-success border-top-0 bg-success text-light p-1">
       <div class="text-left text-light">
         <button type="submit" class="btn btn-secondary btn-sm">Submit</button>
       </div>
@@ -95,11 +91,11 @@
   </div>
 
   <form method="POST" action="{{ url_for('message_create', thread_id=thread.id) }}">
-    <div class="container border border-success border-top-0">
+    <div class="container border border-success border-top-0 bg-success">
       <textarea class="form-control" name="text" rows="7">{{ text }}</textarea>
     </div>
 
-    <div class="container border border-success border-top-0 text-dark bg-light p-1">
+    <div class="container border border-success border-top-0 bg-success text-light p-1">
       <div class="text-left text-light">
         <button type="submit" class="btn btn-secondary btn-sm">Post message</button>
       </div>
