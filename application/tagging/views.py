@@ -8,9 +8,10 @@ from application.tagging.forms import TaggingCreateForm
 @app.route("/threads/<thread_id>/tag/", methods=["POST"])
 @login_required
 def tagging_create(thread_id):
-    form = TaggingCreateForm(request.form)
 
-    tagging = Tagging(thread_id, form.id.data, current_user.id)
+    tagging = Tagging(thread_id, request.form.get("id"), current_user.id)
+
+    # VALIDATION
 
     db.session().add(tagging)
     db.session().commit()

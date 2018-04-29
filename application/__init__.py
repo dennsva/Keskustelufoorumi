@@ -53,18 +53,12 @@ def login_required(role="ANY"):
     return wrapper
 
 # application
-from application import views
-
-from application.tag import models
-
-from application.messages import models
 
 from application.auth import models
-
+from application.tag import models
+from application.messages import models
 from application.thread import models
-
 from application.read import models
-
 from application.tagging import models
 
 # create database tables
@@ -74,9 +68,10 @@ except:
     pass
 
 # views
+from application import views
+from application.auth import views
 from application.tag import views
 from application.messages import views
-from application.auth import views
 from application.thread import views
 from application.tagging import views
 

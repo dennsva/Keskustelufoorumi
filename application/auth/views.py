@@ -18,7 +18,7 @@ def user(user_id):
 def user_create_form():
     return render_template("user_create.html", form = UserCreateForm())
 
-@app.route("/users/register/", methods=["POST"])
+@app.route("/users/", methods=["POST"])
 def user_create():
     form = UserCreateForm(request.form)
 

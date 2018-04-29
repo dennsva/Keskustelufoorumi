@@ -2,39 +2,41 @@
 
 {% block body %}
 
-<h1>Manage tags</h1>
+<h1>Tags</h1>
 
-<table>
-  <tr>
+<table class="table">
+  <tr class="border border-success bg-success text-light">
     <th>Tag</th>
-    <th>Options</th>
+    {% if current_user.admin %}
+    <th>Delete</th>
+    {% endif %}
   </tr>
   {% for tag in tags %}
-  <tr>
+  <tr class="border-left border-right border-bottom border-top-0">
     <td><a href="{{ url_for('thread_find_tag_id', tag_id=tag.id) }}">{{ tag.name }}</a></td>
+    {% if current_user.admin %}
     <td>
-      <form method="POST" action="{{ url_for('tag_edit_form', tag_id=tag.id) }}">
-        <input type="submit" value="Edit"/>
+      <form method="POST" action="{{ url_for('tag_delete', tag_id=tag.id) }}">
+        <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
       </form>
     </td>
+    {% endif %}
   </tr>
   {% endfor %}
 </table>
 
-<form method="POST" action="{{ url_for('tag_create') }}">
-    <table>
-        <tr>
-            <td>{{ tag_create_form.name }}</td>
-            <td><input type="submit" value="Create new tag"/></td>
-            <td>
-                <ul>
-                {% for error in tag_create_form.name.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-                </ul>
-            </td>
-        </tr>
-    </table>
-</form>
+<div class="mt-4 mb-4">  
+  <form class="form-inline" method="POST" action="{{ url_for('tag_create') }}">
+    <div class="container border border-success bg-success p-1">
+      <input type="text" class="form-control-sm" name="name" placeholder="Tag">{{ subject }}</input>
+      <button type="submit" class="btn btn-secondary btn-sm">Create tag</button>
+    </div>
 
+    <div class="container border border-success border-top-0 bg-success text-light">
+      {% for error in tag_create_errors %}
+      <div><h>{{ error }}</h></div>
+      {% endfor %}
+    </div>
+  </form>
+</div>  
 {% endblock %}

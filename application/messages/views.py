@@ -16,77 +16,65 @@ from application.tag.models import Tag
 
 from application.read.models import Read
 
-@app.route("/messages/", methods=["GET"])
-def message_index():
-    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all(), thread_user=User("Gandalf", "password"))
+# this is only for debugging purposes
+#@app.route("/messages/", methods=["GET"])
+#def message_index():
+#    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all(), thread_user=User("Gandalf", "password"))
 
 @app.route("/thread/<thread_id>/", methods=["GET"])
-@app.route("/thread/<thread_id>/edit/<message_edit_id>/", methods=["GET"])
-def thread(thread_id, **params):
-    message_create_text = ""
-    message_edit_text = None
-    tagging = None
-    message_edit_id = None
-    message_create_errors = []
-    message_edit_errors = []
-    if ("message_edit_id" in params):
-        message_edit_id=int(params["message_edit_id"])
-    if ("message_create_text" in params):
-        message_create_text=params["message_create_text"]
-    if ("message_edit_text" in params):
-        message_edit_text=params["message_edit_text"]
-    elif(message_edit_id):
-        message_edit_text=Message.query.get(message_edit_id).text
-    if ("message_create_errors" in params):
-        message_create_errors=params["message_create_errors"]
-    if ("message_edit_errors" in params):
-        message_edit_errors=params["message_edit_errors"]
-    if ("tagging" in params):
-        tagging=params["tagging"]
+def thread(thread_id, message_create=Message("", None, None), show_errors=False, message_edit=None, message_edit_id=None, tagging=None):
+    if message_edit_id:
+        message_edit_id = int(message_edit_id)
+        message_edit = Message.query.get(message_edit_id)
 
     thread = Thread.query.get(thread_id)
-    thread_user = User.query.get(thread.account_id)
+    thread.user = User.query.get(thread.account_id)
 
     if current_user.is_authenticated:
         Read.mark_as_read(current_user.id, thread_id)
 
-    return render_template("thread.html", thread=thread, thread_user=thread_user, message_create_text=message_create_text, message_create_errors=message_create_errors, tagging=tagging, messages=Message.find_thread_id(thread_id), tags=Tag.find_thread_id(thread_id), message_edit_id=message_edit_id, message_edit_text=message_edit_text, message_edit_errors=message_edit_errors)
+    return render_template("thread.html", 
+                            thread=thread,
+                            tags=Tag.find_thread_id(thread_id),
+                            other_tags=Tag.find_not_thread_id(thread_id),
+                            messages=Message.find_thread_id(thread_id),
+                            message_create=message_create,
+                            show_errors=show_errors,
+                            message_edit=message_edit,
+                            tagging=tagging)
 
 @app.route("/thread/<thread_id>/", methods=["POST"])
 @login_required(role="ANY")
 def message_create(thread_id):
     text = request.form.get("text")
-
     message = Message(text, current_user.id, thread_id)
 
-    if not message.validate():
-        return thread(thread_id, message_create_text=text, message_create_errors=message.errors())
+    if not message.validate(new=True):
+        return thread(thread_id=thread_id, message_create=message, show_errors=True)
 
     db.session().add(message)
     db.session().commit()
   
-    return redirect(url_for("thread", thread_id=thread_id))
+    return redirect(url_for('thread', thread_id=thread_id))
 
-@app.route("/thread/<thread_id>/edit/#<message_id>", methods=["POST"])
-def message_edit_form(thread_id, message_id):
-    message = Message.query.get(message_id)
-    thread_id = message.thread_id
-    return redirect(url_for("thread", thread_id=message.thread_id, _anchor=message_id, message_edit_id=message_id))
-
-@app.route("/messages/<message_id>/edit/post/", methods=["POST"])
+@app.route("/thread/edit/<message_id>/", methods=["GET", "POST"])
 def message_edit(message_id):
     message = Message.query.get(message_id)
+
+    if request.method == "GET":
+        return thread(message.thread_id, message_edit=message)
+
     message.text = request.form.get("text")
 
     if not message.validate():
-        return thread(message.thread_id, message_edit_id=message_id, message_edit_text=message.text, message_edit_errors=message.errors())
+        return thread(message.thread_id, message_edit=message)
 
     db.session().add(message)
     db.session().commit()
   
     return thread(message.thread_id)
 
-@app.route("/messages/<message_id>/delete/", methods=["POST"])
+@app.route("/thread/delete/<message_id>/", methods=["POST"])
 def message_delete(message_id):
     message = Message.query.get(message_id)
 

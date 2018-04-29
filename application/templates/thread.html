@@ -3,7 +3,7 @@
 {% block body %}
 <div class="mt-4 mb-4">
 <h1>{{ thread.subject }}</h1>
-<h>Posted by {{ thread_user.username }} on {{ thread.date_created }}</h>
+<h>Posted by {{ thread.user.username }} on {{ thread.date_created }}</h>
 </div>
 
 <div class="mt-4 mb-4">
@@ -18,10 +18,28 @@
     </div>
     {% endfor %}
     
-    <div class="text-right pl-1">
-      <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
-        <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+    <div class="row justify-content-end">  
+      {% if other_tags|length > 0 %}
+      <form method="POST" action="{{ url_for('tagging_create', thread_id=thread.id) }}">
+        <div class="float-right pl-1">
+          <button type="submit" class="btn btn-secondary btn-sm">Tag</button>
+        </div>
+
+        <div class="float-right pl-1">
+          <select class="form-control-sm" name="id">
+            {% for tag in other_tags %}
+            <option value="{{ tag.id }}">{{ tag.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </form>
+      {% endif %}
+
+      <div class="float-right pl-1">
+          <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
+            <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+          </form>
+        </div>
     </div>
   </div>
 
@@ -34,10 +52,10 @@
 <div class="mt-4 mb-4" id="{{ message.id }}">
   <div class="container border border-success bg-success text-light p-1">
     <div class="mt-1 mb-1 ml-2 mr-2 float-left">
-      <h>{{ message.username }} on {{ message.date_created }}</h>
+      <h>{{ message.user.username }} on {{ message.date_created }}</h>
     </div>
-
-    {% if message.id==message_edit_id %}
+    
+    {% if message.id==message_edit.id %}
     <div class="float-right pl-1">
       <form method="POST" action="{{ url_for('message_delete', message_id=message.id) }}">
         <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
@@ -51,17 +69,17 @@
     </div>
     {% else %}
     <div class="text-right pl-1">
-      <form method="POST" action="{{ url_for('message_edit_form', message_id=message.id, thread_id=thread.id) }}">
+      <form method="GET" action="{{ url_for('message_edit', message_id=message.id, _anchor=message.id) }}">
         <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
       </form>
     </div>
     {% endif %}
   </div>
 
-  {% if message.id==message_edit_id %}
+  {% if message.id==message_edit.id %}
   <form method="POST" action="{{ url_for('message_edit', message_id=message.id) }}">
     <div class="container border border-success border-top-0 bg-success">
-      <textarea class="form-control" name="text" rows="7">{{ message_edit_text }}</textarea>
+      <textarea class="form-control" name="text" rows="7">{{ message_edit.text }}</textarea>
     </div>
 
     <div class="container border border-success border-top-0 bg-success text-light p-1">
@@ -69,7 +87,7 @@
         <button type="submit" class="btn btn-secondary btn-sm">Submit</button>
       </div>
 
-      {% for error in message_edit_errors %}
+      {% for error in message_edit.errors() %}
       <div><h>{{ error }}</h></div>
       {% endfor %}
     </div>
@@ -92,7 +110,7 @@
 
   <form method="POST" action="{{ url_for('message_create', thread_id=thread.id) }}">
     <div class="container border border-success border-top-0 bg-success">
-      <textarea class="form-control" name="text" rows="7">{{ text }}</textarea>
+      <textarea class="form-control" name="text" rows="7">{{ message_create.text }}</textarea>
     </div>
 
     <div class="container border border-success border-top-0 bg-success text-light p-1">
@@ -100,9 +118,11 @@
         <button type="submit" class="btn btn-secondary btn-sm">Post message</button>
       </div>
 
-      {% for error in message_create_errors %}
+      {% if show_errors %}
+      {% for error in message_create.errors() %}
       <div><h>{{ error }}</h></div>
       {% endfor %}
+      {% endif %}
     </div>
   </form>
 </div>
