@@ -8,7 +8,7 @@ from application.auth.forms import UserLoginForm
 
 @app.route("/users/", methods=["GET"])
 def user_index():
-    return render_template("users.html", users = User.query.all())
+    return render_template("user_index.html", users = User.user_list())
 
 @app.route("/users/<user_id>/", methods=["GET"])
 def user(user_id):
@@ -42,7 +42,7 @@ def user_login_form():
 def user_login():
     form = UserLoginForm(request.form)
 
-    user = User.query.filter_by(username=form.username.data, password=form.password.data).first()
+    user = User.query.filter_by(username=form.username.data, password=form.password.data, deleted=False).first()
     if not user:
         return render_template("user_login.html", form = form, error = "No such username or password")
 
@@ -54,3 +54,31 @@ def user_login():
 def user_logout():
     logout_user()
     return redirect(url_for("index"))
+
+@app.route("/users/<user_id>/toggle/", methods=["POST"])
+def user_admin_toggle(user_id):
+    user = User.query.get(user_id)
+
+    if user.admin:
+        user.admin = False
+    else:
+        user.admin = True
+
+    db.session().add(user)
+    db.session().commit()
+
+    return redirect(url_for('user_index'))
+
+@app.route("/users/<user_id>/delete/", methods=["POST"])
+def user_delete(user_id):
+    user = User.query.get(user_id)
+
+    user.username = "deleted"
+    user.password = "deleted"
+    user.admin = False
+    user.deleted = True
+
+    db.session().add(user)
+    db.session().commit()
+
+    return redirect(url_for("user_index"))

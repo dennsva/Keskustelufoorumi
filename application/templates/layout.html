@@ -34,12 +34,14 @@
               </ul>
               <div class="form-inline mt-2 mt-md-0">
                 {% if current_user.is_authenticated %}
-                <a>Logged in as {{ current_user.username }} -- </a>
-                <a href="{{ url_for('user_logout') }}">Log out</a>
+                <h class="text-light mr-1">Logged in as</h>
+                <a class="text-light" href="{{ url_for('user', user_id=current_user.id) }}">{{ current_user.username }}</a>
+                <h class="text-light m-1">-</h>
+                <a class="text-light" href="{{ url_for('user_logout') }}"> Log out</a>
                 {% else %}
-                <a href="{{ url_for('user_login') }}">Log in</a>
-                <a>  |  </a>
-                <a href="{{ url_for('user_create') }}">Sign up</a>
+                <a class="text-light" href="{{ url_for('user_login') }}">Log in </a>
+                <h class="text-light m-1">-</h>
+                <a class="text-light" href="{{ url_for('user_create') }}"> Sign up</a>
                 {% endif %}
               </div>
       </div>

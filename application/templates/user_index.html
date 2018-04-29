@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Users</h1>
+
+<table class="table">
+  <tr class="border border-success bg-success text-light">
+    <th>Username</th>
+    <th>Type</th>
+    {% if current_user.admin %}
+    <th>Toggle</th>
+    <th>Delete</th>
+    {% endif %}
+  </tr>
+  {% for user in users %}
+  <tr class="border-left border-right border-bottom border-top-0">
+    <td><a href="{{ url_for('user', user_id=user.id) }}">{{ user.username }}
+    {% if user.admin %}
+    <td><h>Admin</h></td>
+    {% else %}
+    <td><h>User</h></td>
+    {% endif %}
+    {% if current_user.admin %}
+      {% if current_user.id!=user.id %}
+      <td>
+        <form method="POST" action="{{ url_for('user_admin_toggle', user_id=user.id) }}">
+          <button type="submit" class="btn btn-secondary btn-sm">
+            {% if user.admin %}
+              <h>Demote</h>
+            {% else %}
+              <h>Promote</h>
+            {% endif %}
+          </button>
+        </form>
+      </td>
+      {% else %}
+      <td/>
+      {% endif %}
+      <td>
+        <form method="POST" action="{{ url_for('user_delete', user_id=user.id) }}">
+          <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
+        </form>
+      </td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
