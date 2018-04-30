@@ -41,7 +41,8 @@ class Thread(Base):
         stmt = text("SELECT Thread.id, Thread.subject, Thread.date_created, Thread.account_id, Account.username, COUNT(Message.id) AS messages FROM Thread"
                      " LEFT JOIN Account ON Thread.account_id = Account.id"
                      " LEFT JOIN Message ON Thread.id = Message.thread_id"
-                     " GROUP BY Thread.id, Account.username")
+                     " GROUP BY Thread.id, Account.username"
+                     " ORDER BY Thread.date_created")
 
                     # postgresql vaatii tuon Account.username lopussa.
                     # Se ei vaikuta kyselyyn mitenkään, sillä viestiketjun
@@ -58,7 +59,8 @@ class Thread(Base):
                      " LEFT JOIN Account ON Thread.account_id = Account.id"
                      " LEFT JOIN Message ON Thread.id = Message.thread_id"
                      " WHERE Thread.subject LIKE :search_text_param"
-                     " GROUP BY Thread.id, Account.username").params(search_text_param=search_text_param)
+                     " GROUP BY Thread.id, Account.username"
+                     " ORDER BY Thread.date_created").params(search_text_param=search_text_param)
     
         res = db.engine.execute(stmt)
         return Thread.make_list(res)
@@ -70,7 +72,8 @@ class Thread(Base):
                      " LEFT JOIN Message ON Thread.id = Message.thread_id"
                      " LEFT JOIN Tagging ON Tagging.thread_id = Thread.id"
                      " WHERE Tagging.tag_id = :tag_id"
-                     " GROUP BY Thread.id, Account.username").params(tag_id=tag_id)
+                     " GROUP BY Thread.id, Account.username"
+                     " ORDER BY Thread.date_created").params(tag_id=tag_id)
 
         res = db.engine.execute(stmt)
         return Thread.make_list(res)
@@ -88,5 +91,5 @@ class Thread(Base):
                 thread["unread"] = Read.unread_count(current_user.id, thread["id"])
             else:
                 thread["unread"] = thread["messages"]
-
+            
         return threads

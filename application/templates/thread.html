@@ -35,17 +35,54 @@
       </form>
       {% endif %}
 
-      <div class="float-right pl-1">
-          <form method="POST" action="{{ url_for('thread_edit_form', thread_id=thread.id) }}">
-            <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+      {% if thread_edit == None %}
+        {% if current_user.admin or current_user.id==thread.user.id %}
+        <div class="float-right pl-1">
+            <form method="GET" action="{{ url_for('thread_edit', thread_id=thread.id) }}">
+              <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+            </form>
+          </div>
+        </div>
+        {% endif %}
+      {% else %}
+        {% if current_user.admin or (current_user.id==thread.user.user_id and thread.messages==0) %}
+        <div class="float-right pl-1">
+          <form method="POST" action="{{ url_for('thread_delete', message_id=message.id) }}">
+            <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
           </form>
         </div>
-    </div>
+        {% endif %}
+
+        <div class="float-right pl-1">
+          <form method="GET" action="{{ url_for('thread', thread_id=thread.id) }}">
+            <button type="submit" class="btn btn-secondary btn-sm">Cancel</button>
+          </form>
+        </div>
+      {% endif %}
   </div>
 
+  {% if thread_edit == None %}
   <div class="container border border-success border-top-0">
     <p class="p-1" style="white-space:pre-wrap">{{ thread.text }}</p>
   </div>
+  {% else %}
+  <form method="POST" action="{{ url_for('thread_edit', thread_id=thread.id) }}">
+    <div class="container border border-success border-top-0 bg-success">
+      <textarea class="form-control" name="text" rows="7">{{ thread_edit.text }}</textarea>
+    </div>
+
+    <div class="container border border-success border-top-0 bg-success text-light p-1">
+      <div class="text-left text-light">
+        <button type="submit" class="btn btn-secondary btn-sm">Submit</button>
+      </div>
+
+      {% for error in thread_edit.errors() %}
+      <div><h>{{ error }}</h></div>
+      {% endfor %}
+    </div>
+  </form>
+  {% endif %}
+  
 </div>
 
 {% for message in messages %}
@@ -68,11 +105,13 @@
       </form>
     </div>
     {% else %}
-    <div class="text-right pl-1">
-      <form method="GET" action="{{ url_for('message_edit', message_id=message.id, _anchor=message.id) }}">
-        <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
-      </form>
-    </div>
+      {% if current_user.admin or current_user.id==message.user.id %}
+      <div class="text-right pl-1">
+        <form method="GET" action="{{ url_for('message_edit', message_id=message.id, _anchor=message.id) }}">
+          <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
+        </form>
+      </div>
+      {% endif %}
     {% endif %}
   </div>
 
@@ -119,7 +158,7 @@
       </div>
 
       {% if show_errors %}
-      {% for error in message_create.errors() %}
+      {% for error in message_create.errors(new=True) %}
       <div><h>{{ error }}</h></div>
       {% endfor %}
       {% endif %}

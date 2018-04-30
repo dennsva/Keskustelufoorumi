@@ -25,18 +25,24 @@
   {% endfor %}
 </table>
 
+{% if current_user.admin %}
 <div class="mt-4 mb-4">  
   <form class="form-inline" method="POST" action="{{ url_for('tag_create') }}">
     <div class="container border border-success bg-success p-1">
-      <input type="text" class="form-control-sm" name="name" placeholder="Tag">{{ subject }}</input>
+      <input type="text" class="form-control-sm" name="name" placeholder="Tag" value="{{ tag_create.name }}"></input>
       <button type="submit" class="btn btn-secondary btn-sm">Create tag</button>
     </div>
 
     <div class="container border border-success border-top-0 bg-success text-light">
-      {% for error in tag_create_errors %}
+      
+      {% if show_errors %}
+      {% for error in tag_create.errors(new=True) %}
       <div><h>{{ error }}</h></div>
       {% endfor %}
+      {% endif %}
     </div>
   </form>
-</div>  
+</div>
+{% endif %}
+
 {% endblock %}

@@ -45,7 +45,8 @@ class Message(Base):
 
         stmt = text("SELECT Message.id, Message.text, Message.date_created, Message.account_id, Message.thread_id, Account.id, Account.username FROM Message"
                      " LEFT JOIN Account ON Message.account_id = Account.id"
-                     " WHERE Message.thread_id = :thread_id").params(thread_id=thread_id)
+                     " WHERE Message.thread_id = :thread_id"
+                     " ORDER BY Message.date_created").params(thread_id=thread_id)
 
         res = db.engine.execute(stmt)
 

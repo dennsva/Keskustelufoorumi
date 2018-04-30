@@ -24,10 +24,13 @@ class Read(Base):
 
         res = db.engine.execute(stmt)
 
-        read = res.fetchone()[0]
+        read = res.fetchone()
         res.close()
 
-        return read
+        if read == None:
+            return 0
+
+        return read[0]
 
     @staticmethod
     def unread_count(user_id, thread_id):
@@ -41,30 +44,30 @@ class Read(Base):
 
         res = db.engine.execute(stmt)
 
-        messages = res.fetchone()[0]
+        messages = res.fetchone()
         res.close()
 
-        return messages
+        if messages == None:
+            return 0
+
+        return messages[0]
 
     @staticmethod
     def mark_as_read(user_id, thread_id):
         messages = Message.find_thread_id(thread_id)
         for message in messages:
-            read = Read.exists(user_id, message.id)
+            read = Read(user_id, message.id)
 
-            if read:
+            if read.exists():
                 continue
 
-            stmt2 = text("INSERT INTO Read (account_id, message_id)"
-                        " VALUES (:account_id, :message_id)").params(account_id=user_id, message_id=message.id)
+            db.session().add(read)
+            db.session().commit()
 
-            db.engine.execute(stmt2)
-
-    @staticmethod
-    def exists(user_id, message_id):
+    def exists(self):
         stmt = text("SELECT Read.id FROM Read"
                         " WHERE Read.account_id = :account_id"
-                        " AND Read.message_id = :message_id").params(account_id=user_id, message_id=message_id)
+                        " AND Read.message_id = :message_id").params(account_id=self.account_id, message_id=self.message_id)
 
         res = db.engine.execute(stmt)
 

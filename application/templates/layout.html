@@ -36,9 +36,9 @@
                 <h class="text-light m-1">-</h>
                 <a class="text-light" href="{{ url_for('user_logout') }}"> Log out</a>
                 {% else %}
-                <a class="text-light" href="{{ url_for('user_login') }}">Log in </a>
+                <a class="text-light" href="{{ url_for('user_login_form') }}">Log in </a>
                 <h class="text-light m-1">-</h>
-                <a class="text-light" href="{{ url_for('user_create') }}"> Sign up</a>
+                <a class="text-light" href="{{ url_for('user_create_form') }}"> Sign up</a>
                 {% endif %}
               </div>
       </div>

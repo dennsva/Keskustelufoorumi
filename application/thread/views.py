@@ -7,8 +7,7 @@ from application.tag.models import Tag
 from application.tagging.models import Tagging
 from application.messages.models import Message
 
-from application.thread.forms import ThreadCreateForm
-from application.thread.forms import ThreadEditForm
+from application.messages.views import thread as view_thread
 
 @app.route("/threads/", methods=["GET"])
 def thread_index(threads=Thread.thread_list(), thread_create=Thread("", "", None), show_errors=False, search_text=None, tag=None):
@@ -41,26 +40,22 @@ def thread_create():
   
     return redirect(url_for('thread', thread_id=thread.id))
 
-@app.route("/threads/<thread_id>/edit/", methods=["POST"])
-def thread_edit_form(thread_id):
-    thread = Thread.query.get(thread_id)
-    return render_template("thread_edit.html", form = ThreadEditForm(thread.text), thread=thread)
-
-@app.route("/threads/<thread_id>/edit/post/", methods=["POST"])
+@app.route("/thread/<thread_id>/edit/", methods=["GET", "POST"])
 def thread_edit(thread_id):
-
-    # FIX VALIDATION
-    # if not form.validate():
-    #    return render_template("thread_edit.html", form=form, thread=Thread.query.get(thread_id))
-
     thread = Thread.query.get(thread_id)
-    thread.subject = request.form.get("subject")
-    thread.text = request.form.get("data")
+
+    if request.method == "GET":
+        return view_thread(thread_id, thread_edit=thread)
+
+    thread.text = request.form.get("text")
+
+    if not thread.validate():
+        return view_thread(thread_id, thread_edit=thread)
 
     db.session().add(thread)
     db.session().commit()
   
-    return redirect(url_for("thread", thread_id=thread.id))
+    return redirect(url_for('thread', thread_id=thread_id))
 
 @app.route("/threads/<thread_id>/delete/", methods=["POST"])
 def thread_delete(thread_id):

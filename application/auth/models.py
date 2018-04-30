@@ -30,7 +30,7 @@ class User(Base):
             errors.append("The password cannot be empty")
         if new:
             if User.exists(self.username):
-                return errors.append("The username is taken")
+                errors.append("The username is taken")
         return errors
 
     def get_id(self):
@@ -52,7 +52,8 @@ class User(Base):
     def user_list():
 
         stmt = text("SELECT Account.id, Account.username, Account.date_created, Account.admin FROM Account"
-                     " WHERE NOT Account.deleted")
+                     " WHERE NOT Account.deleted"
+                     " ORDER BY Account.username")
 
         res = db.engine.execute(stmt)
 
@@ -68,15 +69,45 @@ class User(Base):
         if username == "deleted":
             return True
 
-        stmt = text("SELECT Account.id, Account.username, Account.date_created, Account.admin FROM Account"
+        stmt = text("SELECT Account.id FROM Account"
                      " WHERE NOT Account.deleted"
                      " AND Account.username = :username").params(username=username)
 
         res = db.engine.execute(stmt)
 
         user = res.fetchone()
+        res.close()
 
         if user == None:
             return False
 
         return True
+
+    @staticmethod
+    def admin_count():
+        stmt = text("SELECT COUNT(Account.id) FROM Account"
+                     " WHERE Account.admin")
+
+        res = db.engine.execute(stmt)
+
+        admin_count = res.fetchone()
+        res.close()
+
+        if admin_count == None:
+            return 0
+
+        return admin_count[0]
+
+    @staticmethod
+    def user_count():
+        stmt = text("SELECT COUNT(Account.id) FROM Account")
+
+        res = db.engine.execute(stmt)
+
+        user_count = res.fetchone()
+        res.close()
+
+        if user_count == None:
+            return 0
+
+        return user_count[0]

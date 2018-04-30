@@ -7,20 +7,23 @@
 <table class="table">
   <tr class="border border-success bg-success text-light">
     <th>Username</th>
-    <th>Type</th>
+    <th>Role</th>
     {% if current_user.admin %}
-    <th>Toggle</th>
-    <th>Delete</th>
+    <th>Change</th>
     {% endif %}
+    <th>Delete</th>
   </tr>
   {% for user in users %}
   <tr class="border-left border-right border-bottom border-top-0">
+
     <td><a href="{{ url_for('user', user_id=user.id) }}">{{ user.username }}
+
     {% if user.admin %}
     <td><h>Admin</h></td>
     {% else %}
     <td><h>User</h></td>
     {% endif %}
+
     {% if current_user.admin %}
       {% if current_user.id!=user.id %}
       <td>
@@ -37,12 +40,22 @@
       {% else %}
       <td/>
       {% endif %}
+    {% endif %}
+
+    {% if user.id==current_user.id or current_user.admin %}
+      {% if user.admin and 1 >= admin_count %}
+      <td>You are the only admin.</td>
+      {% else %}
       <td>
         <form method="POST" action="{{ url_for('user_delete', user_id=user.id) }}">
           <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
         </form>
       </td>
+      {% endif %}
+    {% else %}
+    <td/>
     {% endif %}
+
   </tr>
   {% endfor %}
 </table>

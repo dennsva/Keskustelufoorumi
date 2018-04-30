@@ -6,17 +6,18 @@ from application.tag.models import Tag
 from application.tagging.models import Tagging
 
 @app.route("/tags/", methods=["GET"])
-def tag_index():
-    return render_template("tag_index.html", tags=Tag.tag_list())
+def tag_index(tag_create=Tag(""), show_errors=False):
+    return render_template("tag_index.html",
+                            tags=Tag.tag_list(),
+                            tag_create=tag_create,
+                            show_errors=show_errors)
 
 @app.route("/tags/", methods=["POST"])
 def tag_create():
-
-    # FIX VALIDATION
-    #if not form.validate():
-    #    return render_template("tag_index.html", tags=Tag.tag_list(), tag_create_form=form)
-
     tag = Tag(request.form.get("name"))
+
+    if not tag.validate(new=True):
+        return tag_index(tag_create=tag, show_errors=True)
 
     db.session().add(tag)
     db.session().commit()
