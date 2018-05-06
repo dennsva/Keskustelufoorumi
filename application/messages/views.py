@@ -19,14 +19,19 @@ from application.read.models import Read
 #    return render_template("thread.html", message_create_form=MessageCreateForm(), tagging_create_form=TaggingCreateForm(), thread=Thread.query.first(), messages=Message.query.all(), thread_user=User("Gandalf", "password"))
 
 @app.route("/thread/<thread_id>/", methods=["GET"])
-def thread(thread_id, thread_edit=None, message_create=Message("", None, None), show_errors=False, message_edit=None, message_edit_id=None):
+def thread(thread_id,
+            thread_edit=None,
+            message_create=Message("", None, None),
+            show_errors=False,
+            message_edit=None,
+            message_edit_id=None):
     if message_edit_id:
         message_edit_id = int(message_edit_id)
         message_edit = Message.query.get(message_edit_id)
 
     thread = Thread.query.get(thread_id)
     thread.user = User.query.get(thread.account_id)
-    print(thread.user)
+
     if current_user.is_authenticated:
         Read.mark_as_read(current_user.id, thread_id)
 

@@ -61,12 +61,8 @@ def user_logout():
 def user_admin_toggle(user_id):
     user = User.query.get(user_id)
 
-    if user.admin:
-        user.admin = False
-    else:
-        user.admin = True
+    user.admin = not user.admin
 
-    db.session().add(user)
     db.session().commit()
 
     return redirect(url_for('user_index'))
@@ -83,7 +79,6 @@ def user_delete(user_id):
     user.admin = False
     user.deleted = True
 
-    db.session().add(user)
     db.session().commit()
 
     if user.id == current_user.id:

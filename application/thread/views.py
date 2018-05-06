@@ -64,6 +64,7 @@ def thread_delete(thread_id):
     Message.thread_delete_messages(thread_id)
     Tagging.thread_delete_taggings(thread_id)
 
+    db.session().add(thread)
     db.session().delete(thread)
     db.session().commit()
 

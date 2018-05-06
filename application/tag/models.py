@@ -43,7 +43,7 @@ class Tag(Base):
         stmt = text("SELECT Tag.id, Tag.name FROM Tag"
                     " LEFT JOIN Tagging ON Tagging.tag_id = Tag.id"
                     " WHERE Tagging.thread_id=:thread_id"
-                    " ORDER BY Tag.name").params(thread_id=thread_id)
+                    " ORDER BY Tag.name, Tag.id").params(thread_id=thread_id)
 
         res = db.engine.execute(stmt)
 
@@ -61,7 +61,7 @@ class Tag(Base):
                         "SELECT Tag.id FROM Tag"
                         " LEFT JOIN Tagging ON Tagging.tag_id = Tag.id"
                         " WHERE Tagging.thread_id=:thread_id)"
-                    " ORDER BY Tag.name").params(thread_id=thread_id)
+                    " ORDER BY Tag.name, Tag.id").params(thread_id=thread_id)
 
         res = db.engine.execute(stmt)
 
