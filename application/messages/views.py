@@ -25,6 +25,7 @@ def thread(thread_id,
             show_errors=False,
             message_edit=None,
             message_edit_id=None):
+            
     if message_edit_id:
         message_edit_id = int(message_edit_id)
         message_edit = Message.query.get(message_edit_id)
@@ -38,8 +39,8 @@ def thread(thread_id,
     return render_template("thread.html", 
                             thread=thread,
                             thread_edit=thread_edit,
-                            #tags=Tag.find_thread_id(thread_id),
-                            #other_tags=Tag.find_not_thread_id(thread_id),
+                            tags=Tag.find_thread_id(thread_id),
+                            other_tags=Tag.find_not_thread_id(thread_id),
                             messages=Message.find_thread_id(thread_id),
                             message_create=message_create,
                             show_errors=show_errors,

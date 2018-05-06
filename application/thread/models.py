@@ -82,7 +82,7 @@ class Thread(Base):
     def make_list(res):
         threads = []
         for row in res:
-            threads.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4], "messages":row[5]})
+            threads.append({"id":row[0], "subject":row[1], "date_created":row[2], "user_id":row[3], "username":row[4], "messages":row[5], "unread":0})
 
         for thread in threads:
             if current_user == None:

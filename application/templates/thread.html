@@ -47,7 +47,7 @@
       {% else %}
         {% if current_user.admin or (current_user.id==thread.user.user_id and thread.messages==0) %}
         <div class="float-right pl-1">
-          <form method="POST" action="{{ url_for('thread_delete', message_id=message.id) }}">
+          <form method="POST" action="{{ url_for('thread_delete', thread_id=thread.id) }}">
             <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
           </form>
         </div>
