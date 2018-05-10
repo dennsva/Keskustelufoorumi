@@ -48,6 +48,7 @@
   </form>
 </div>  
 
+{% if current_user.is_authenticated %}
 <div class="mt-4 mb-4">
   <div class="container border border-success bg-success text-light p-1">
     <div class="mt-1 mb-1 ml-2 mr-2 text-left">
@@ -75,4 +76,5 @@
     </div>
   </form>
 </div>
+{% endif %}
 {% endblock %}
