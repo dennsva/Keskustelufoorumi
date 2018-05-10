@@ -10,7 +10,11 @@ from application.messages.models import Message
 from application.messages.views import thread as view_thread
 
 @app.route("/threads/", methods=["GET"])
-def thread_index(threads=Thread.thread_list(), thread_create=Thread("", "", None), show_errors=False, search_text=None, tag=None):
+def thread_index(threads=None, thread_create=Thread("", "", None), show_errors=False, search_text=None, tag=None):
+
+    if threads == None:
+        threads = Thread.thread_list()
+
     return render_template("thread_index.html",
                             threads=threads,
                             thread_create=thread_create,
@@ -38,7 +42,7 @@ def thread_create():
     db.session().add(thread)
     db.session().commit()
   
-    return redirect(url_for('thread', thread_id=thread.id))
+    return thread_index()
 
 @app.route("/thread/<thread_id>/edit/", methods=["GET", "POST"])
 def thread_edit(thread_id):
