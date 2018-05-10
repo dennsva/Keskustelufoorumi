@@ -26,8 +26,12 @@ class User(Base):
         errors = []
         if len(self.username) < 1:
             errors.append("The username cannot be empty")
-        if len(self.password) < 1:
-            errors.append("The password cannot be empty")
+        if len(self.username) > 32:
+            errors.append("The username must be at most 32 characters long")
+        if len(self.password) < 6:
+            errors.append("The password must be at least 6 characters long")
+        if len(self.password) > 32:
+            errors.append("The password must be at most 32 characters long")
         if new:
             if User.exists(self.username):
                 errors.append("The username is taken")

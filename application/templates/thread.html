@@ -16,26 +16,33 @@
 
     {% for tag in tags %}
     <div class="float-left pl-1">
-      <form method="GET" action="{{ url_for('thread_find_tag_id', tag_id=tag.id) }}">
-        <button type="submit" class="btn btn-secondary btn-sm">{{ tag.name }}</button>
+      <form method="POST" action="{{ url_for('tagging_button', tag_id=tag.id, thread_id=thread.id) }}">
+        <div class="btn-group btn-group-sm">
+          <button type="submit" name="find_tag" class="btn btn-secondary btn-sm">{{ tag.name }}</button>
+          {% if current_user.is_authenticated %}
+          <button type="submit" name="delete" class="btn btn-secondary btn-sm">X</button>
+          {% endif %}
+        </div>
       </form>
     </div>
     {% endfor %}
 
     {% if current_user.is_authenticated and other_tags|length > 0 %}
-    <form method="POST" action="{{ url_for('tagging_create', thread_id=thread.id) }}">
-      <div class="float-right pl-1">
-        <button type="submit" class="btn btn-secondary btn-sm">Tag</button>
-      </div>
+    <div class="float-right">
+      <form method="POST" action="{{ url_for('tagging_create', thread_id=thread.id) }}">
+        <div class="float-right pl-1">
+          <button type="submit" class="btn btn-secondary btn-sm">Tag</button>
+        </div>
 
-      <div class="float-right pl-1">
-        <select class="form-control-sm" name="id">
-          {% for tag in other_tags %}
-          <option value="{{ tag.id }}">{{ tag.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-    </form>
+        <div class="float-right pl-1">
+          <select class="form-control-sm" name="id">
+            {% for tag in other_tags %}
+            <option value="{{ tag.id }}">{{ tag.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </form>
+    </div>
     {% endif %}
 
     {% if thread_edit == None %}

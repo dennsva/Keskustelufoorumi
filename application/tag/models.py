@@ -19,6 +19,8 @@ class Tag(Base):
         errors = []
         if len(self.name) < 1:
             errors.append("The tag cannot be empty")
+        if len(self.name) > 128:
+            errors.append("The tag must be at most 128 characters long")
         if new:
             if Tag.exists(self.name):
                 errors.append("The tag already exists")

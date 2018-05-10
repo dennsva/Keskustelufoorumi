@@ -32,8 +32,12 @@ class Thread(Base):
         errors = []
         if len(self.subject) < 1:
             errors.append("The subject cannot be empty")
+        if len(self.subject) > 128:
+            errors.append("The subject must be at most 128 characters long")
         if len(self.text) < 1:
             errors.append("The message cannot be empty")
+        if len(self.text) > 8096:
+            errors.append("The message must be at most 8096 characters long")
         return errors
 
     @staticmethod

@@ -48,6 +48,9 @@ def thread_create():
 def thread_edit(thread_id):
     thread = Thread.query.get(thread_id)
 
+    if not (current_user.admin or current_user.id == thread.user_id):
+        return redirect(url_for('thread', thread_id=thread_id))
+
     if request.method == "GET":
         return view_thread(thread_id, thread_edit=thread)
 
@@ -64,6 +67,9 @@ def thread_edit(thread_id):
 @app.route("/threads/<thread_id>/delete/", methods=["POST"])
 def thread_delete(thread_id):
     thread = Thread.query.get(thread_id)
+
+    if not (current_user.admin or current_user.id == thread.user_id):
+        return redirect(url_for('thread', thread_id=thread_id))
 
     Message.thread_delete_messages(thread_id)
     Tagging.thread_delete_taggings(thread_id)

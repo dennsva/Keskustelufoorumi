@@ -30,6 +30,8 @@ class Message(Base):
         errors = []
         if len(self.text) < 1:
             errors.append("The message cannot be empty")
+        if len(self.text) > 8096:
+            errors.append("The message must be at most 8096 charaters long")
         return errors
 
     @staticmethod
