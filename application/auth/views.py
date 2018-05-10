@@ -30,8 +30,8 @@ def user_create():
         return render_template("user_create.html", form = form)
 
     user = User(form.username.data, form.password.data)
-    #if User.user_count() == 0:
-    #    user.admin = True
+    if User.user_count() == 0:
+        user.admin = True
 
     db.session().add(user)
     db.session().commit()
