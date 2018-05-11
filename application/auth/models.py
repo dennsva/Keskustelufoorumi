@@ -14,6 +14,7 @@ class User(Base):
 
     messages = db.relationship("Message", backref='account', lazy=True)
     taggings = db.relationship("Tagging", backref='account', lazy=True)
+    reads = db.relationship("Read", backref='account', lazy=True, cascade="delete")
 
     def __init__(self, username, password=None, id=None):
         self.username = username

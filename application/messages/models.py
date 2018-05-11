@@ -12,6 +12,8 @@ class Message(Base):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
     thread_id = db.Column(db.Integer, db.ForeignKey('thread.id'), nullable=False)
 
+    reads = db.relationship("Read", backref='message', lazy=True, cascade="delete")
+    
     def __init__(self, text, user_id=None, thread_id=None, id=None, date_created=None, date_modified=None, user=None):
         self.text = text
         self.account_id = user_id
@@ -39,7 +41,7 @@ class Message(Base):
 
         stmt = text("DELETE FROM Message"
                      " WHERE thread_id = :thread_id").params(thread_id=thread_id)
-
+    
         db.engine.execute(stmt)
 
     @staticmethod
