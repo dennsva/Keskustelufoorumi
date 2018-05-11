@@ -48,7 +48,7 @@ def thread_create():
 def thread_edit(thread_id):
     thread = Thread.query.get(thread_id)
 
-    if not (current_user.admin or current_user.id == thread.user_id):
+    if not (current_user.admin or current_user.id == thread.account_id):
         return redirect(url_for('thread', thread_id=thread_id))
 
     if request.method == "GET":
