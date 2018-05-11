@@ -5,7 +5,7 @@
 * Hakea viestiketjuja nimen perusteella
 * Luoda viestikejuja
 * Muokata luomiaan viestiketjuja
-* Poistaa viestiketjun (rajoitteita tähän?)
+* Poistaa luomansa viestiketjun, jos siihen ei ole tullut vastauksia
 
 * Lähettää viestejä viestikejuihin
 * Muokata lähettämiään viestejä
@@ -13,23 +13,20 @@
 
 * Tagata viestiketjuja
 * Nähdä viestiketjun tagit
+* Nähdä viestiketjut, jotka on tagatty tietyllä tagilla
 
-* Nähdä, kun on lukenut viestiketjun
-* Nähdä, kun kaikki ovat lukeneet viestiketjun
-* Nähdä listan henkilöistä, jotka ovat lukeneet viestiketjun
+* Nähdä, kuinka monta vastausta ketjussa on
+* Nähdä, kuinka monta lukematonta vastausta ketjussa on
 
 ## Ylläpitäjä voi
 * Kaikki normaalin käyttäjän toiminnot
-* Luoda foorumille osioita?
-* Muokata ja poistaa myös muiden käyttäjien viestejä
+* Muokata ja poistaa kaikkia viestejä
 
 * Tehdä käyttäjästä ylläpitäjän
-* Tehdä itsestään normaalin käyttäjän?
+* Tehdä ylläpitäjästä käyttäjän
 
 * Määritellä tageja
 
-## Lisää ideoita
-* Pisteitä viesteille?
-* Järjestäminen pisteiden tai muun perusteella?
-* Foorumin pääsivu?
-* Käyttäjän oma sivu?
+## Lisäksi
+* Foorumin pääsivu
+* Käyttäjän (ei kovin mielenkiintoinen) oma sivu
