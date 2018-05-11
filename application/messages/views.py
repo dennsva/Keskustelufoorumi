@@ -65,7 +65,7 @@ def message_create(thread_id):
 def message_edit(message_id):
     message = Message.query.get(message_id)
 
-    if not (current_user.admin or current_user.id == message.user_id):
+    if not (current_user.admin or current_user.id == message.account_id):
         return redirect(url_for('thread', thread_id=message.thread_id))
 
     if request.method == "GET":
@@ -86,7 +86,7 @@ def message_edit(message_id):
 def message_delete(message_id):
     message = Message.query.get(message_id)
 
-    if not (current_user.admin or current_user.id == message.user_id):
+    if not (current_user.admin or current_user.id == message.account_id):
         return redirect(url_for('thread', thread_id=message.thread_id))
 
     Read.message_delete_read(message_id)

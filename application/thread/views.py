@@ -68,7 +68,7 @@ def thread_edit(thread_id):
 def thread_delete(thread_id):
     thread = Thread.query.get(thread_id)
 
-    if not (current_user.admin or current_user.id == thread.user_id):
+    if not (current_user.admin or current_user.id == thread.account_id):
         return redirect(url_for('thread', thread_id=thread_id))
 
     Message.thread_delete_messages(thread_id)

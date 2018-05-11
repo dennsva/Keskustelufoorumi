@@ -47,7 +47,7 @@
 
     {% if thread_edit == None %}
 
-      {% if current_user.admin or current_user.id==thread.user.id %}
+      {% if current_user.admin or current_user.id==thread.account_id %}
       <div class="float-right pl-1">
         <form method="GET" action="{{ url_for('thread_edit', thread_id=thread.id) }}">
           <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
@@ -57,7 +57,7 @@
 
     {% else %}
 
-      {% if current_user.admin or (current_user.id==thread.user.user_id and thread.messages==0) %}
+      {% if current_user.admin or (current_user.id==thread.account_id and messages|length == 0) %}
       <div class="justify-content-end pl-1">
         <form method="POST" action="{{ url_for('thread_delete', thread_id=thread.id) }}">
           <button type="submit" class="btn btn-secondary btn-sm">Delete</button>
@@ -118,7 +118,7 @@
       </form>
     </div>
     {% else %}
-      {% if current_user.admin or current_user.id==message.user.id %}
+      {% if current_user.admin or current_user.id==message.account_id %}
       <div class="text-right pl-1">
         <form method="GET" action="{{ url_for('message_edit', message_id=message.id, _anchor=message.id) }}">
           <button type="submit" class="btn btn-secondary btn-sm">Edit</button>
