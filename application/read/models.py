@@ -76,3 +76,11 @@ class Read(Base):
             return False
 
         return True
+    
+    @staticmethod
+    def message_delete_read(message_id):
+
+        stmt = text("DELETE FROM Read"
+                     " WHERE message_id = :message_id").params(message_id=message_id)
+
+        db.engine.execute(stmt)

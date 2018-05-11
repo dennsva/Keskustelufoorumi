@@ -89,6 +89,8 @@ def message_delete(message_id):
     if not (current_user.admin or current_user.id == message.user_id):
         return redirect(url_for('thread', thread_id=message.thread_id))
 
+    Read.message_delete_read(message_id)
+s
     db.session().delete(message)
     db.session().commit()
 
