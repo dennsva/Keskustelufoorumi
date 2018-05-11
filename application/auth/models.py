@@ -8,7 +8,7 @@ class User(Base):
     __tablename__ = "account"
 
     username = db.Column(db.String(32), nullable=False)
-    password = db.Column(db.String(32), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     admin = db.Column(db.Boolean, default=False)
     deleted = db.Column(db.Boolean, default=False)
 
@@ -90,7 +90,8 @@ class User(Base):
     @staticmethod
     def admin_count():
         stmt = text("SELECT COUNT(Account.id) FROM Account"
-                     " WHERE Account.admin")
+                     " WHERE Account.admin"
+                     " AND (NOT Account.deleted)")
 
         res = db.engine.execute(stmt)
 
@@ -104,7 +105,8 @@ class User(Base):
 
     @staticmethod
     def user_count():
-        stmt = text("SELECT COUNT(Account.id) FROM Account")
+        stmt = text("SELECT COUNT(Account.id) FROM Account"
+                    " WHERE (NOT Account.deleted)")
 
         res = db.engine.execute(stmt)
 

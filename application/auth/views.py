@@ -1,3 +1,4 @@
+import bcrypt
 from application import app, db
 from flask import redirect, render_template, request, url_for
 from flask_login import login_user, logout_user, current_user
@@ -29,7 +30,18 @@ def user_create():
     if not form.validate():
         return render_template("user_create.html", form = form)
 
-    user = User(form.username.data, form.password.data)
+    if form.username.data == "deleted":
+        return render_template("user_create.html", form = form, error = "Username cannot be deleted")
+
+    user = User.query.filter_by(username=form.username.data, deleted=False).first()
+    if user:
+        return render_template("user_create.html", form = form, error = "Username already exists")
+
+    password = form.password.data.encode() # utf-8 for bcrypt
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode()
+
+    user = User(form.username.data, hashed)
+
     if User.user_count() == 0:
         user.admin = True
 
@@ -44,8 +56,19 @@ def user_create():
 def user_login():
     form = UserLoginForm(request.form)
 
-    user = User.query.filter_by(username=form.username.data, password=form.password.data, deleted=False).first()
+    if not form.validate():
+        return render_template("user_login.html", form = form)
+
+    if form.username.data == "deleted":
+        return render_template("user_create.html", form = form, error = "You cannot login to a deleted account")
+
+    user = User.query.filter_by(username=form.username.data, deleted=False).first()
     if not user:
+        return render_template("user_login.html", form = form, error = "No such username or password")
+
+    password = request.form.get("password").encode() # utf-8 for bcrypt
+
+    if not bcrypt.checkpw(password, user.password.encode()):
         return render_template("user_login.html", form = form, error = "No such username or password")
 
     login_user(user)
@@ -73,6 +96,9 @@ def user_delete(user_id):
 
     if user.admin and User.admin_count() <= 1:
         redirect(url_for("user_index"))
+
+    if not (current_user.admin or current_user.id == user.id):
+        return redirect(url_for('user_index'))
 
     user.username = "deleted"
     user.password = "deleted"

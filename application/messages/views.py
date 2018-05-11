@@ -90,7 +90,7 @@ def message_delete(message_id):
         return redirect(url_for('thread', thread_id=message.thread_id))
 
     Read.message_delete_read(message_id)
-s
+
     db.session().delete(message)
     db.session().commit()
 
